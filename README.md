@@ -71,7 +71,7 @@
 	<li>HELLO</li>
 </ul>
 
-⭐⭐⭐ <b> SECTION 7 : JWT (JSON Web Token)<b> 
+⭐⭐⭐ <b> SECTION 7 : JWT (JSON Web Token)</b>
 <ul>	
 	<li>INTRO TO JSON WEB TOKEN (JWT)</li>
 	<li>JWT LIBRARY</li>
