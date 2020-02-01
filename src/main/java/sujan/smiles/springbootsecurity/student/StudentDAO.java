@@ -6,6 +6,13 @@ import java.util.Optional;
 public interface StudentDAO {
 
     List<Student> getStudents();
+
     Optional<Student> getStudentById(int id);
+
+    List<Student> registerNewStudent(Student student);
+
+    List<Student> deleteStudent(int id);
+
+    List<Student> updateStudentName(int id, String name);
 
 }

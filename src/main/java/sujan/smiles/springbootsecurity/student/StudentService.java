@@ -22,6 +22,20 @@ public class StudentService {
     }
 
     public Student getStudentById(int id) {
-        return studentDAO.getStudentById(id).orElse(null);
+        return studentDAO.getStudentById(id).orElseThrow(() -> new IllegalStateException("Student " + id + " not available!"));
+    }
+
+
+    public List<Student> registerNewStudent(Student student) {
+        return studentDAO.registerNewStudent(student);
+    }
+
+    public List<Student> deleteStudent(int id) {
+        return studentDAO.deleteStudent(id);
+
+    }
+
+    public List<Student> updateStudentName(int id, String name) {
+        return studentDAO.updateStudentName(id, name);
     }
 }
