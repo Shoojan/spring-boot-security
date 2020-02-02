@@ -3,15 +3,15 @@ package sujan.smiles.springbootsecurity.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sujan.smiles.springbootsecurity.auth.ApplicationUserService;
+import sujan.smiles.springbootsecurity.auth.db.DbApplicationUserService;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,15 +20,17 @@ import static sujan.smiles.springbootsecurity.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableJpaRepositories(basePackageClasses = DbApplicationUserService.class)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationUserService applicationUserService;
+//    private final ApplicationUserService applicationUserService;
+    private final DbApplicationUserService dbApplicationUserService;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, DbApplicationUserService dbApplicationUserService) {
         this.passwordEncoder = passwordEncoder;
-        this.applicationUserService = applicationUserService;
+        this.dbApplicationUserService = dbApplicationUserService;
     }
 
     @Override
@@ -45,14 +47,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
+
 //                .httpBasic();
                 .formLogin()
                 .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/courses", true)
+//                .defaultSuccessUrl("/courses", true)
                 .and()
                 .rememberMe()
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(20))
                 .and()
+
                 .logout()
                 .logoutUrl("/logout")
                 .clearAuthentication(true)
@@ -61,7 +65,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login");
     }
 
-//
+
 //    @Override
 //    @Bean
 //    protected UserDetailsService userDetailsService() {
@@ -73,7 +77,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //        return new InMemoryUserDetailsManager(adminDetail);
 //    }
-//
+
 //    @Override
 //    @Bean
 //    protected UserDetailsService userDetailsService() {
@@ -111,7 +115,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(applicationUserService);
+        provider.setUserDetailsService(dbApplicationUserService);
         return provider;
     }
 }

@@ -1,18 +1,19 @@
-package sujan.smiles.springbootsecurity.student;
+package sujan.smiles.springbootsecurity.student.memory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import sujan.smiles.springbootsecurity.student.Student;
 
 import java.util.List;
 
 @Service
-public class StudentService {
+public class StudentService_Memory {
 
     private final StudentDAO studentDAO;
 
     @Autowired
-    public StudentService(@Qualifier(value = "memoryDb") StudentDAO studentDAO) {
+    public StudentService_Memory(@Qualifier(value = "memoryDb") StudentDAO studentDAO) {
         this.studentDAO = studentDAO;
     }
 

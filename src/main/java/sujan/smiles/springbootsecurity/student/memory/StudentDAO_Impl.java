@@ -1,20 +1,21 @@
-package sujan.smiles.springbootsecurity.student;
+package sujan.smiles.springbootsecurity.student.memory;
 
 import org.springframework.stereotype.Repository;
+import sujan.smiles.springbootsecurity.student.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository("memoryDb")
-public class StudentDAOImpl implements StudentDAO {
+public class StudentDAO_Impl implements StudentDAO {
 
     private static List<Student> students = new ArrayList<>();
 
     static {
-        students.add(new Student(students.size() + 1, "Student1"));
-        students.add(new Student(students.size() + 1, "Student2"));
-        students.add(new Student(students.size() + 1, "Student3"));
+        students.add(new Student(students.size() + 1, "Student1", 12));
+        students.add(new Student(students.size() + 1, "Student2", 13));
+        students.add(new Student(students.size() + 1, "Student3", 16));
     }
 
     @Override
@@ -42,13 +43,24 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public List<Student> updateStudentName(int id, String name) {
+    public List<Student> updateStudentName(int id, String studentName) {
         Student oldStudentDetail = students.stream()
                 .filter(student -> student.getId() == id)
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Student " + id + " not found"));
         students.remove(oldStudentDetail);
-        students.add(new Student(id, name));
+        students.add(new Student(id, studentName, oldStudentDetail.getAge()));
+        return students;
+    }
+
+    @Override
+    public List<Student> updateStudentAge(int id, int age) {
+        Student oldStudentDetail = students.stream()
+                .filter(student -> student.getId() == id)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Student " + id + " not found"));
+        students.remove(oldStudentDetail);
+        students.add(new Student(id, oldStudentDetail.getName(), age));
         return students;
     }
 

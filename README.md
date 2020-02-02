@@ -74,7 +74,7 @@
 ⭐⭐⭐ <b> SECTION 7 : JWT (JSON Web Token)</b>
 <ul>	
 	<li>INTRO TO JSON WEB TOKEN (JWT)</li>
-	<li>JWT LIBRARY</li>
+	<li>JWT LIBRARY (https://github.com/jwtk/jjwt)</li>
 	<li>JwtUsernameAndPasswordAuthenticationFilter - attemptAuthentication()</li>
 	<li>JwtUsernameAndPasswordAuthenticationFilter - successfulAuthentication</li>
 	<li>REQUEST FILTERS</li>

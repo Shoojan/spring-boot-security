@@ -1,4 +1,4 @@
-package sujan.smiles.springbootsecurity.auth;
+package sujan.smiles.springbootsecurity.auth.memory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
