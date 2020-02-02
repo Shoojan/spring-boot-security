@@ -3,6 +3,7 @@ package sujan.smiles.springbootsecurity.student.memory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import sujan.smiles.springbootsecurity.exception.ApiRequestException;
 import sujan.smiles.springbootsecurity.student.Student;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class StudentService_Memory {
     }
 
     public Student getStudentById(int id) {
-        return studentDAO.getStudentById(id).orElseThrow(() -> new IllegalStateException("Student " + id + " not available!"));
+        return studentDAO.getStudentById(id)
+                .orElseThrow(() -> new ApiRequestException("Student " + id + " not available!"));
     }
 
 

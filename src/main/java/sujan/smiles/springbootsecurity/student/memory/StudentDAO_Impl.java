@@ -1,6 +1,7 @@
 package sujan.smiles.springbootsecurity.student.memory;
 
 import org.springframework.stereotype.Repository;
+import sujan.smiles.springbootsecurity.exception.ApiRequestException;
 import sujan.smiles.springbootsecurity.student.Student;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class StudentDAO_Impl implements StudentDAO {
         Student oldStudentDetail = students.stream()
                 .filter(student -> student.getId() == id)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Student " + id + " not found"));
+                .orElseThrow(() -> new ApiRequestException("Student " + id + " not found"));
         students.remove(oldStudentDetail);
         students.add(new Student(id, studentName, oldStudentDetail.getAge()));
         return students;
@@ -58,7 +59,7 @@ public class StudentDAO_Impl implements StudentDAO {
         Student oldStudentDetail = students.stream()
                 .filter(student -> student.getId() == id)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Student " + id + " not found"));
+                .orElseThrow(() -> new ApiRequestException("Student " + id + " not found"));
         students.remove(oldStudentDetail);
         students.add(new Student(id, oldStudentDetail.getName(), age));
         return students;

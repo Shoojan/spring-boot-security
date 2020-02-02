@@ -2,6 +2,7 @@ package sujan.smiles.springbootsecurity.student.db;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sujan.smiles.springbootsecurity.exception.ApiRequestException;
 import sujan.smiles.springbootsecurity.student.Student;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class StudentService {
     }
 
     public Student getStudentById(int id) {
-        return studentDAO.findById(id).orElseThrow(() -> new IllegalStateException("Student + " + id + " not found!"));
+        return studentDAO.findById(id).orElseThrow(() -> new ApiRequestException("Student + " + id + " not found!"));
     }
 
 
