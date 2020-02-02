@@ -1,4 +1,7 @@
 
+NOTE:
+<p>Learned from Amigoscode (https://www.youtube.com/watch?v=her_7pa0vrg&t=11950s)</p>
+
 ⭐⭐⭐ <b> SECTION 1 - Lets begin </b>
 <ul>	
 	<li>BOOTSTRAPPING</li>
