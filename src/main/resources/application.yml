@@ -9,3 +9,10 @@ spring:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+application:
+  jwt:
+    secretKey: This_is_a_very_secure_and_long_key_so_that_nobody_gets_through_my_system
+    tokenPrefix: Bearer
+    tokenExpirationAfterDays: 14

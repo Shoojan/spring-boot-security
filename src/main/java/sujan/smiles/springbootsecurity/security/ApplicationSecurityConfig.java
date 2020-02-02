@@ -10,10 +10,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sujan.smiles.springbootsecurity.auth.db.DbApplicationUserService;
+import sujan.smiles.springbootsecurity.jwt.JwtConfig;
+import sujan.smiles.springbootsecurity.jwt.JwtTokenVerifier;
+import sujan.smiles.springbootsecurity.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
-import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
 
 import static sujan.smiles.springbootsecurity.security.ApplicationUserPermission.*;
 import static sujan.smiles.springbootsecurity.security.ApplicationUserRole.*;
@@ -24,19 +28,33 @@ import static sujan.smiles.springbootsecurity.security.ApplicationUserRole.*;
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
-//    private final ApplicationUserService applicationUserService;
+    //    private final ApplicationUserService applicationUserService;
     private final DbApplicationUserService dbApplicationUserService;
+    private final SecretKey secretKey;
+    private final JwtConfig jwtConfig;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, DbApplicationUserService dbApplicationUserService) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
+                                     DbApplicationUserService dbApplicationUserService,
+                                     SecretKey secretKey,
+                                     JwtConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;
         this.dbApplicationUserService = dbApplicationUserService;
+        this.secretKey = secretKey;
+        this.jwtConfig = jwtConfig;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+
+                //JWT Authentication
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //because JWT token are stateless
+                .and()
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))//authenticationManager is accessible because we are extending WebSecurityConfigurerAdapter
+                .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class)
+
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()  //whitelist these patterns
                 .antMatchers("/api/**").hasRole(STUDENT.getRole())
@@ -45,24 +63,29 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/management/api/**").hasAnyAuthority(STUDENT_WRITE.getPermission())
                 .antMatchers("/management/api/**").hasAnyRole(ADMIN.getRole(), ADMIN_TRAINEE.getRole())
                 .anyRequest()
-                .authenticated()
-                .and()
+                .authenticated();
 
+
+        //Basic Authentication
+//                .and()
 //                .httpBasic();
-                .formLogin()
-                .loginPage("/login").permitAll()
-//                .defaultSuccessUrl("/courses", true)
-                .and()
-                .rememberMe()
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(20))
-                .and()
 
-                .logout()
-                .logoutUrl("/logout")
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "remember-me")
-                .logoutSuccessUrl("/login");
+        //Form Based Authentication
+//                .formLogin()
+//                .loginPage("/login").permitAll()
+////                .defaultSuccessUrl("/courses", true)
+//                .and()
+//                .rememberMe()
+//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(20))
+//                .and()
+//
+//                .logout()
+//                .logoutUrl("/logout")
+//                .clearAuthentication(true)
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID", "remember-me")
+//                .logoutSuccessUrl("/login");
+
     }
 
 
